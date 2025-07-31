@@ -1,0 +1,17 @@
+deployment:
+  replicas: 1
+updateStrategy:
+  type: Recreate
+  rollingUpdate:
+globalArguments:
+logs:
+  access:
+    enabled: true
+ingressRoute:
+  dashboard:
+    enabled: true
+service:
+  type: NodePort
+ports:
+  web:
+    nodePort: ${web_node_port}

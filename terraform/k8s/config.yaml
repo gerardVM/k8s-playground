@@ -1,0 +1,10 @@
+helm_releases:
+  traefik:
+    name: traefik
+    namespace:
+      name: traefik
+      create: true
+    repository: https://helm.traefik.io/traefik
+    chart: traefik
+    version: v35.4.0
+    wait: true

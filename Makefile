@@ -2,10 +2,11 @@
 
 ## Configuration
 
-CLUSTER_NAME = local-playground
+CLUSTER_NAME   = local-playground
 CLUSTER_CONFIG = scripts/kind-cluster-config.yaml
-KUBECONFIG = tmp/kubeconfig.yaml
-CLUSTER = $(KUBECTL) --kubeconfig $(KUBECONFIG)
+KUBECONFIG     = tmp/kubeconfig.yaml
+CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
+TERRAFORM_DIR ?= terraform/k8s
 
 ## Quick-start
 
@@ -40,23 +41,23 @@ cluster-destroy: kind
 ### Initialize terraform deployment
 .PHONY: terraform-init
 terraform-init: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=terraform init
+	$(TERRAFORM) -chdir=${TERRAFORM_DIR} init
 
 ### Plan the terraform deployment
 .PHONY: terraform-plan
 terraform-plan: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=terraform plan
+	$(TERRAFORM) -chdir=${TERRAFORM_DIR} plan
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
 terraform-apply: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=terraform apply --auto-approve=true
+	$(TERRAFORM) -chdir=${TERRAFORM_DIR} apply
 
 ### Destroy the terraform deployment
 .PHONY: terraform-destroy
 terraform-destroy: require-cluster require-kubeconfig terraform
-	[ -f terraform/terraform.tfstate ] && $(TERRAFORM) -chdir=terraform destroy --auto-approve=true || true
-	
+	[ -f terraform/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy || true
+
 ## Helpers
 
 ### Ensure that the cluster exists

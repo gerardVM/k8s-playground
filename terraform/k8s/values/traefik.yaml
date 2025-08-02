@@ -14,4 +14,4 @@ service:
   type: NodePort
 ports:
   web:
-    nodePort: ${web_node_port}
+    nodePort: 30000

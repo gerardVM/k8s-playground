@@ -1,14 +1,12 @@
-resource "helm_release" "traefik" {
-  name              = "traefik"
-  namespace         = "traefik"
-  create_namespace  = true
-  repository        = "https://helm.traefik.io/traefik"
-  chart             = "traefik"
-  version           = "v35.4.0"
-  wait              = true
-  values            = [
-    templatefile(abspath("${path.module}/helm/traefik.yaml"), {
-      web_node_port       = var.traefik_web_nodeport
-    })
-  ]
+resource "helm_release" "components" {
+  for_each = local.helm_releases
+
+  name              = each.value.name
+  namespace         = each.value.namespace.name
+  create_namespace  = each.value.namespace.create
+  repository        = each.value.repository
+  chart             = each.value.chart
+  version           = each.value.version
+  wait              = each.value.wait
+  values            = [file("${path.module}/values/${each.key}.yaml")]
 }

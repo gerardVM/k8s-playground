@@ -1,7 +1,7 @@
 resource "helm_release" "components" {
   for_each = local.helm_releases
 
-  name              = each.value.name
+  name              = each.key
   namespace         = each.value.namespace.name
   create_namespace  = each.value.namespace.create
   repository        = each.value.repository

@@ -8,5 +8,5 @@ resource "helm_release" "components" {
   chart             = each.value.chart
   version           = each.value.version
   wait              = each.value.wait
-  values            = [file("${path.module}/values/${each.key}.yaml")]
+  values            = try([file("${path.module}/values/${each.key}.yaml")], [])
 }

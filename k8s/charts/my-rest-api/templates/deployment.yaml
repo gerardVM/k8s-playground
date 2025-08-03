@@ -17,4 +17,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.image.containerPort }}
+      env:
+        - name: LISTEN_HOST
+          value: {{ .Values.env.listenHost }}
+        - name: LISTEN_PORT
+          value: {{ .Values.env.listenPort }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.image.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.image.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10

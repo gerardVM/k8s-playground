@@ -56,7 +56,7 @@ terraform-apply: require-cluster require-kubeconfig terraform
 ### Destroy the terraform deployment
 .PHONY: terraform-destroy
 terraform-destroy: require-cluster require-kubeconfig terraform
-	[ -f terraform/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy ${TERRAFORM_OPT} || true
+	[ -f ${TERRAFORM_DIR}/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy ${TERRAFORM_OPT} || true
 
 ## Helpers
 

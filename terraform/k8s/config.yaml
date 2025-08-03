@@ -1,5 +1,5 @@
 helm_releases:
-  traefik:
+  - name: traefik
     namespace:
       name: traefik
       create: true
@@ -7,7 +7,7 @@ helm_releases:
     chart: traefik
     version: v35.4.0
     wait: true
-  prometheus:
+  - name: prometheus
     disabled: true
     namespace:
       name: monitoring
@@ -16,7 +16,7 @@ helm_releases:
     chart: kube-prometheus-stack
     version: "v73.2.0"
     wait: true
-  my-rest-api:
+  - name: my-rest-api
     disabled: true
     namespace:
       name: my-rest-api

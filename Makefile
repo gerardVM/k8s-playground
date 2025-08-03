@@ -41,22 +41,22 @@ cluster-destroy: kind
 ### Initialize terraform deployment
 .PHONY: terraform-init
 terraform-init: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=${TERRAFORM_DIR} init
+	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) init
 
 ### Plan the terraform deployment
 .PHONY: terraform-plan
 terraform-plan: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=${TERRAFORM_DIR} plan ${TERRAFORM_OPT}
+	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) plan $(TERRAFORM_OPT)
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
 terraform-apply: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=${TERRAFORM_DIR} apply ${TERRAFORM_OPT}
+	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT)
 
 ### Destroy the terraform deployment
 .PHONY: terraform-destroy
 terraform-destroy: require-cluster require-kubeconfig terraform
-	[ -f ${TERRAFORM_DIR}/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy ${TERRAFORM_OPT} || true
+	[ -f $(TERRAFORM_DIR)/terraform.tfstate ] && $(TERRAFORM) -chdir=$(TERRAFORM_DIR) destroy $(TERRAFORM_OPT) || true
 
 ## Helpers
 

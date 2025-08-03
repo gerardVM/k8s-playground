@@ -25,7 +25,7 @@ cluster-create: kind kubectl
 	$(KIND) get clusters | grep $(CLUSTER_NAME) || ( \
 		$(KIND) create cluster --name $(CLUSTER_NAME) --config $(CLUSTER_CONFIG) --kubeconfig $(KUBECONFIG) && \
 		$(CLUSTER) wait --for=condition=ready node --all --timeout=60s && \
-		docker exec -it $(CLUSTER_NAME)-control-plane bash -c "apt-get update && apt-get install -y ca-certificates && update-ca-certificates" \
+		docker exec $(CLUSTER_NAME)-control-plane bash -c "apt-get update && apt-get install -y ca-certificates && update-ca-certificates" \
 	)
 
 ### Destroy the cluster

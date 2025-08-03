@@ -1,0 +1,24 @@
+name: Start and stop test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Enable all disabled components in config
+        run: |
+          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config.yaml
+      - name: Start kind cluster
+        run: make start TERRAFORM_OPT="--auto-approve"
+      - name: Stop kind cluster
+        run: make stop TERRAFORM_OPT="--auto-approve"

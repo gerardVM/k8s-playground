@@ -8,6 +8,7 @@ helm_releases:
     version: v35.4.0
     wait: true
   prometheus:
+    disabled: true
     namespace:
       name: monitoring
       create: true

@@ -25,7 +25,7 @@ cluster-create: kind kubectl
 	$(KIND) get clusters | grep $(CLUSTER_NAME) || ( \
 		$(KIND) create cluster --name $(CLUSTER_NAME) --config $(CLUSTER_CONFIG) --kubeconfig $(KUBECONFIG) && \
 		$(CLUSTER) wait --for=condition=ready node --all --timeout=60s && \
-		docker exec -it $(CLUSTER_NAME)-control-plane bash -c "apt-get update && apt-get install -y ca-certificates && update-ca-certificates" \
+		docker exec $(CLUSTER_NAME)-control-plane bash -c "apt-get update && apt-get install -y ca-certificates && update-ca-certificates" \
 	)
 
 ### Destroy the cluster
@@ -46,17 +46,17 @@ terraform-init: require-cluster require-kubeconfig terraform
 ### Plan the terraform deployment
 .PHONY: terraform-plan
 terraform-plan: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=${TERRAFORM_DIR} plan
+	$(TERRAFORM) -chdir=${TERRAFORM_DIR} plan ${TERRAFORM_OPT}
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
 terraform-apply: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=${TERRAFORM_DIR} apply
+	$(TERRAFORM) -chdir=${TERRAFORM_DIR} apply ${TERRAFORM_OPT}
 
 ### Destroy the terraform deployment
 .PHONY: terraform-destroy
 terraform-destroy: require-cluster require-kubeconfig terraform
-	[ -f terraform/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy || true
+	[ -f ${TERRAFORM_DIR}/terraform.tfstate ] && $(TERRAFORM) -chdir=${TERRAFORM_DIR} destroy ${TERRAFORM_OPT} || true
 
 ## Helpers
 

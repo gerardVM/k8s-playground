@@ -1,0 +1,27 @@
+helm_releases:
+  - name: my-rest-api
+    disabled: true
+    namespace:
+      name: staging-my-rest-api
+      create: true
+    repository: ../../k8s/charts
+    chart: my-rest-api
+    version: 0.1.0
+    wait: true
+    variables:
+      replicaCount: 1
+      image: nginx
+      subdomain: staging.
+  - name: my-rest-api
+    disabled: false
+    namespace:
+      name: prod-my-rest-api
+      create: true
+    repository: ../../k8s/charts
+    chart: my-rest-api
+    version: 0.1.0
+    wait: true
+    variables:
+      replicaCount: 2
+      image: nginx
+      subdomain: ""

@@ -17,7 +17,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Enable all disabled components in config
         run: |
-          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config.yaml
+          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config/system.yaml
+          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config/applications.yaml
       - name: Start kind cluster
         run: make start TERRAFORM_OPT="--auto-approve"
       - name: Stop kind cluster

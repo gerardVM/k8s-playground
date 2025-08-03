@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "my-rest-api.fullname" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "my-rest-api.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "my-rest-api.name" . }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.image.containerPort }}
+      env:
+        - name: LISTEN_HOST
+          value: {{ .Values.env.listenHost }}
+        - name: LISTEN_PORT
+          value: {{ .Values.env.listenPort }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.image.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: {{ .Values.image.containerPort }}
+            initialDelaySeconds: 5
+            periodSeconds: 10

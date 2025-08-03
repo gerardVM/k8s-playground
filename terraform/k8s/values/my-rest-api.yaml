@@ -24,5 +24,3 @@ ingress:
       paths:
         - path: /
           pathType: Prefix
-
-resources: {}

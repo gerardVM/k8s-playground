@@ -1,11 +1,11 @@
-replicaCount: 2
+replicaCount: ${replicaCount}
 
 env:
   listenHost: 0.0.0.0
   listenPort: 80
 
 image:
-  repository: nginx
+  repository: ${image}
   tag: latest
   pullPolicy: IfNotPresent
   containerPort: 80
@@ -20,7 +20,7 @@ ingress:
   annotations: 
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: my-api.example.com
+    - host: ${subdomain}my-api.example.com
       paths:
         - path: /
           pathType: Prefix

@@ -16,3 +16,12 @@ helm_releases:
     chart: kube-prometheus-stack
     version: "v73.2.0"
     wait: true
+  my-rest-api:
+    disabled: true
+    namespace:
+      name: my-rest-api
+      create: true
+    repository: ../../k8s/charts
+    chart: my-rest-api
+    version: 0.1.0
+    wait: true

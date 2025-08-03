@@ -1,0 +1,5 @@
+apiVersion: v2
+name: my-rest-api
+description: A Helm chart for a REST API app
+version: 0.1.0
+appVersion: "1.0.0"

@@ -10,6 +10,8 @@ resource "kubernetes_manifest" "manifest" {
   for_each = local.manifests
 
   manifest = yamldecode(file(each.value))
+
+  depends_on = [kubernetes_namespace.namespace]
 }
 
 resource "helm_release" "components" {

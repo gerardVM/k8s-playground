@@ -6,6 +6,12 @@ resource "kubernetes_namespace" "namespace" {
   }
 }
 
+resource "kubernetes_manifest" "manifest" {
+  for_each = local.manifests
+
+  manifest = yamldecode(file(each.value))
+}
+
 resource "helm_release" "components" {
   for_each = local.helm_releases
 

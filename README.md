@@ -11,3 +11,7 @@ Just run `make start` to create the cluster and deploy the resources defined in 
 Run `export KUBECONFIG=tmp/kubeconfig.yaml` to set the kubeconfig for kubectl commands.
 
 Run `make stop` to delete the cluster and clean up resources.
+
+### Secrets Management
+
+Secrets are managed using SOPS. The secrets placed in the `k8s/secrets` need to be encrypted using SOPS. To use plain text secrets, you can place them in the `k8s/manifests` directory. Make sure you delete the example encrypted secrets files before starting.

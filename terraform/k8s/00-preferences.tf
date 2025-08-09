@@ -11,7 +11,7 @@ terraform {
       version = "~> 2.17.0"
     }
     sops = {
-      source = "carlpett/sops"
+      source  = "carlpett/sops"
       version = "~> 1.0"
     }
   }

@@ -5,14 +5,14 @@ data "sops_file" "secret" {
 }
 
 resource "kubernetes_secret" "secrets" {
-  for_each = data.sops_file.secret
+  for_each = local.k8s_secrets_d
 
   metadata {
-    name      = yamldecode(each.value.raw).metadata.name
-    namespace = yamldecode(each.value.raw).metadata.namespace
+    name      = each.value.metadata.name
+    namespace = each.value.metadata.namespace
   }
 
-  data = yamldecode(each.value.raw).data
+  data = each.value.data
 }
 
 resource "helm_release" "components" {

@@ -1,17 +1,13 @@
 helm_releases:
   - name: traefik
-    namespace:
-      name: traefik
-      create: true
+    namespace: traefik
     repository: https://helm.traefik.io/traefik
     chart: traefik
     version: v35.4.0
     wait: true
   - name: prometheus
     disabled: true
-    namespace:
-      name: monitoring
-      create: true
+    namespace: monitoring
     repository: https://prometheus-community.github.io/helm-charts
     chart: kube-prometheus-stack
     version: "v73.2.0"

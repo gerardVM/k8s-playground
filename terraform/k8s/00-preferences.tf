@@ -10,6 +10,10 @@ terraform {
       source  = "hashicorp/helm"
       version = "~> 2.17.0"
     }
+    sops = {
+      source  = "carlpett/sops"
+      version = "~> 1.0"
+    }
   }
 }
 
@@ -22,6 +26,8 @@ provider "helm" {
     config_path = var.kubeconfig_path
   }
 }
+
+provider "sops" {}
 
 variable "kubeconfig_path" {
   description = "path to kubeconfig"

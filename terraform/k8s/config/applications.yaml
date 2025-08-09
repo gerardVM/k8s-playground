@@ -1,9 +1,7 @@
 helm_releases:
   - name: my-rest-api
     disabled: true
-    namespace:
-      name: staging-my-rest-api
-      create: true
+    namespace: staging-my-rest-api
     repository: ../../k8s/charts
     chart: my-rest-api
     version: 0.1.0
@@ -14,9 +12,7 @@ helm_releases:
       subdomain: staging.
   - name: my-rest-api
     disabled: false
-    namespace:
-      name: prod-my-rest-api
-      create: true
+    namespace: prod-my-rest-api
     repository: ../../k8s/charts
     chart: my-rest-api
     version: 0.1.0

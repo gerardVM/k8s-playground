@@ -12,13 +12,29 @@ jobs:
   tests:
     name: Run tests
     runs-on: ubuntu-latest
+    env:
+      KMS_KEY_ARN: ${{ vars.KMS_KEY_ARN }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+      AWS_ROLE: ${{ vars.AWS_ROLE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.AWS_ROLE }}
+          role-session-name: k8s-playground
+          aws-region: ${{ env.AWS_REGION }}
       - name: Enable all disabled components in config
         run: |
           sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config/system.yaml
           sed -i 's/disabled: true/disabled: false/g' terraform/k8s/config/applications.yaml
+      - name: Inject KMS key ARN into kubernetes secrets
+        run: |
+          for file in k8s/secrets/*.yaml; do
+            sed -i "s/\${KMS_KEY_ARN}/${{ env.KMS_KEY_ARN }}/g" "$file"
+          done
       - name: Start kind cluster
         run: make start TERRAFORM_OPT="--auto-approve"
       - name: Stop kind cluster

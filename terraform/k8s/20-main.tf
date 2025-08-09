@@ -1,3 +1,20 @@
+data "sops_file" "secret" {
+  for_each = local.k8s_secrets
+
+  source_file = each.value
+}
+
+resource "kubernetes_secret" "secrets" {
+  for_each = data.sops_file.secret
+
+  metadata {
+    name      = yamldecode(each.value.raw).metadata.name
+    namespace = yamldecode(each.value.raw).metadata.namespace
+  }
+
+  data = yamldecode(each.value.raw).data
+}
+
 resource "helm_release" "components" {
   for_each = local.helm_releases
 

@@ -1,6 +1,3 @@
-namespaces:
-  - prod-my-rest-api
-
 helm_releases:
   - name: my-rest-api
     disabled: true

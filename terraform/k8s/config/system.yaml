@@ -1,7 +1,3 @@
-namespaces:
-  - traefik
-  - monitoring
-
 helm_releases:
   - name: traefik
     namespace: traefik

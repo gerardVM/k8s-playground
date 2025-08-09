@@ -14,7 +14,5 @@ resource "kubernetes_secret" "secrets" {
 
   data = each.value.data
 
-  depends_on = [
-    helm_release.components
-  ]
+  depends_on = [ kubernetes_namespace.namespace ]
 }

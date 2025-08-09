@@ -1,9 +1,17 @@
+resource "kubernetes_namespace" "namespace" {
+  for_each = local.namespaces
+
+  metadata {
+    name = each.key
+  }
+}
+
 resource "helm_release" "components" {
   for_each = local.helm_releases
 
   name             = each.value.name
-  namespace        = each.value.namespace.name
-  create_namespace = each.value.namespace.create
+  namespace        = each.value.namespace
+  create_namespace = false
   repository       = each.value.repository
   chart            = each.value.chart
   version          = each.value.version
@@ -13,4 +21,6 @@ resource "helm_release" "components" {
       try(each.value.variables, {})
     )
   ], [])
+
+  depends_on = [ kubernetes_namespace.namespace ]
 }

@@ -37,7 +37,7 @@ jobs:
       - name: Inject KMS key ARN into kubernetes secrets
         run: |
           for file in k8s/secrets/*.yaml; do
-            sed -i "s/\${KMS_KEY_ARN}/${{ env.KMS_KEY_ARN }}/g" "$file"
+            sed -i "s|\${KMS_KEY_ARN}|${{ env.KMS_KEY_ARN }}|g" "$file"
           done
       - name: Start kind cluster
         run: make start TERRAFORM_OPT="--auto-approve"

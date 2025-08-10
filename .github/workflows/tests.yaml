@@ -48,6 +48,7 @@ jobs:
     name: Provision AWS infrastructure
     runs-on: ubuntu-latest
     env:
+      KMS_KEY_ARN: ${{ vars.KMS_KEY_ARN }}
       AWS_REGION: ${{ vars.AWS_REGION }}
       AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
       AWS_ROLE: ${{ vars.AWS_ROLE }}

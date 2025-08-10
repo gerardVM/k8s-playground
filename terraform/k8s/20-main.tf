@@ -7,7 +7,7 @@ resource "kubernetes_namespace" "namespace" {
 }
 
 resource "kubernetes_manifest" "manifest" {
-  for_each = local.manifests
+  for_each = local.k8s_files.manifests
 
   manifest = yamldecode(file(each.value))
 
@@ -24,7 +24,7 @@ resource "helm_release" "components" {
   version    = each.value.version
   wait       = each.value.wait
   values = try([
-    templatefile("${path.module}/values/${each.value.name}.yaml",
+    templatefile(local.k8s_files.values[each.value.name],
       try(each.value.variables, {})
     )
   ], [])

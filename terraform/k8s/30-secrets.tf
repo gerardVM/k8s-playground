@@ -1,5 +1,5 @@
 data "sops_file" "secret" {
-  for_each = local.k8s_secrets
+  for_each = local.k8s_files.secrets
 
   source_file = each.value
 }

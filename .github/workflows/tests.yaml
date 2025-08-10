@@ -43,3 +43,30 @@ jobs:
         run: make start TERRAFORM_OPT="--auto-approve"
       - name: Stop kind cluster
         run: make stop TERRAFORM_OPT="--auto-approve"
+
+  aws:
+    name: Provision AWS infrastructure
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+      AWS_ROLE: ${{ vars.AWS_ROLE }}
+      AWS_TF_ROLE: ${{ vars.AWS_TF_ROLE }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/${{ env.AWS_ROLE }}
+          role-session-name: k8s-playground
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Start kind cluster
+        run: make start TERRAFORM_OPT="--auto-approve"
+      - name: Run Terraform
+        run: |
+          export TF_VAR_aws_role=${{ env.AWS_TF_ROLE }}
+          export TF_VAR_aws_region=${{ env.AWS_REGION }}
+          export TF_VAR_aws_account_id=${{ env.AWS_ACCOUNT_ID }}
+          make terraform-init TERRAFORM_DIR=terraform/aws TERRAFORM_OPT="--auto-approve"
+          make apply TERRAFORM_DIR=terraform/aws TERRAFORM_OPT="--auto-approve"

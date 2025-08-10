@@ -1,4 +1,19 @@
 helm_releases:
+  - name: traefik
+    namespace: traefik
+    repository: https://helm.traefik.io/traefik
+    chart: traefik
+    version: v35.4.0
+    wait: true
+
+  - name: prometheus
+    disabled: true
+    namespace: monitoring
+    repository: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    version: "v73.2.0"
+    wait: true
+
   - name: my-rest-api
     disabled: true
     namespace: staging-my-rest-api
@@ -10,6 +25,7 @@ helm_releases:
       replicaCount: 1
       image: nginx
       subdomain: staging.
+
   - name: my-rest-api
     disabled: false
     namespace: prod-my-rest-api

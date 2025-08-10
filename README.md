@@ -14,4 +14,4 @@ Run `make stop` to delete the cluster and clean up resources.
 
 ### Secrets Management
 
-Secrets are managed using SOPS. The secrets placed in the `k8s/secrets` need to be encrypted using SOPS. To use plain text secrets, you can place them in the `k8s/manifests` directory. Make sure you delete the example encrypted secrets files before starting.
+The secrets placed in the `k8s/terraform/secrets` need to be encrypted using SOPS. To use plain text secrets, you can place them in the `k8s/terraform/manifests` directory. Make sure you delete the encrypted secrets files before starting.

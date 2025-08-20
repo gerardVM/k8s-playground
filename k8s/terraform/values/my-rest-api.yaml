@@ -20,7 +20,7 @@ ingress:
   annotations: 
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: ${subdomain}my-api.example.com
+    - host: ${subdomain}my-api.gerardvm.tech
       paths:
         - path: /
           pathType: Prefix

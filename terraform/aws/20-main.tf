@@ -13,13 +13,13 @@ data "aws_iam_policy_document" "external_dns" {
   statement {
     sid       = "AllowRoute53"
     effect    = "Allow"
-    actions   = ["route53:ListHostedZones", "route53:GetHostedZone", "route53:ListResourceRecordSets"]
+    actions   = ["route53:ChangeResourceRecordSets"]
     resources = ["arn:aws:route53:::hostedzone/*"]
   }
   statement {
     sid       = "AllowListRoute53Zones"
     effect    = "Allow"
-    actions   = ["route53:ListHostedZones", "route53:ListHostedZonesByName"]
+    actions   = ["route53:ListHostedZones", "route53:ListResourceRecordSets", "route53:ListTagsForResources"]
     resources = ["*"]
   }
 }

@@ -41,5 +41,10 @@ jobs:
           done
       - name: Start kind cluster
         run: make start TERRAFORM_OPT="--auto-approve"
+      - name: Run smoke tests
+        run: |
+          curl localhost:30001
+          curl -H "Host: my-api.com" localhost:30000
+          curl -H "Host: staging.my-api.com" localhost:30000
       - name: Stop kind cluster
         run: make stop TERRAFORM_OPT="--auto-approve"

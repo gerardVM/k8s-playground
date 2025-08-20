@@ -2,25 +2,25 @@ replicaCount: ${replicaCount}
 
 env:
   listenHost: 0.0.0.0
-  listenPort: 80
+  listenPort: 5678
 
 image:
-  repository: ${image}
+  repository: hashicorp/http-echo
   tag: latest
   pullPolicy: IfNotPresent
-  containerPort: 80
+  containerPort: 5678
 
 service:
   type: ClusterIP
-  port: 80
+  port: 5678
 
 ingress:
   enabled: true
-  className: nginx
+  className: traefik
   annotations: 
     nginx.ingress.kubernetes.io/rewrite-target: /
   hosts:
-    - host: ${subdomain}my-api.example.com
+    - host: ${subdomain}${domain}
       paths:
         - path: /
           pathType: Prefix

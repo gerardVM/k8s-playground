@@ -23,8 +23,8 @@ helm_releases:
     wait: true
     variables:
       replicaCount: 1
-      image: nginx
       subdomain: staging.
+      domain: my-api.com
 
   - name: my-rest-api
     disabled: false
@@ -35,5 +35,5 @@ helm_releases:
     wait: true
     variables:
       replicaCount: 2
-      image: nginx
       subdomain: ""
+      domain: my-api.com

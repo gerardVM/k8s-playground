@@ -25,6 +25,7 @@ helm_releases:
       replicaCount: 1
       subdomain: staging.
       domain: my-api.com
+      message: "Hello from my-api staging environment!"
 
   - name: my-rest-api
     disabled: false
@@ -37,3 +38,4 @@ helm_releases:
       replicaCount: 2
       subdomain: ""
       domain: my-api.com
+      message: "Hello from my-api production environment!"

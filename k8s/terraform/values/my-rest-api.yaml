@@ -9,6 +9,8 @@ image:
   tag: latest
   pullPolicy: IfNotPresent
   containerPort: 5678
+  args:
+    - "-text=${message}"
 
 service:
   type: ClusterIP

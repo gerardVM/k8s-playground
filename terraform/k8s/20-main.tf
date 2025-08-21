@@ -1,18 +1,18 @@
 # Namespaces (from Kubernetes manifests)
 
 resource "kubernetes_manifest" "namespace" {
-  for_each = local.k8s_files.namespaces
+  for_each = local.k8s_resources.namespaces
 
-  manifest = yamldecode(file(each.value))
+  manifest = yamldecode(each.value)
 }
 
 
 # Kubernetes manifests
 
 resource "kubernetes_manifest" "manifest" {
-  for_each = local.k8s_files.manifests
+  for_each = local.k8s_resources.manifests
 
-  manifest = yamldecode(file(each.value))
+  manifest = yamldecode(each.value)
 
   depends_on = [kubernetes_secret.secrets]
 }
@@ -21,7 +21,7 @@ resource "kubernetes_manifest" "manifest" {
 # Namespaces (from Helm releases)
 
 resource "kubernetes_namespace" "namespace" {
-  for_each = local.namespaces
+  for_each = local.helm_namespaces
 
   metadata {
     name = each.key

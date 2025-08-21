@@ -18,6 +18,7 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: {{ .Values.image.containerPort }}
+          args: {{ .Values.image.args | toJson }}
       env:
         - name: LISTEN_HOST
           value: {{ .Values.env.listenHost }}

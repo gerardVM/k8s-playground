@@ -23,8 +23,9 @@ helm_releases:
     wait: true
     variables:
       replicaCount: 1
-      image: nginx
       subdomain: staging.
+      domain: my-api.com
+      message: "Hello from my-api staging environment!"
 
   - name: my-rest-api
     disabled: false
@@ -35,5 +36,6 @@ helm_releases:
     wait: true
     variables:
       replicaCount: 2
-      image: nginx
       subdomain: ""
+      domain: my-api.com
+      message: "Hello from my-api production environment!"

@@ -51,12 +51,12 @@ jobs:
           set -e  # exit immediately if a command fails
           declare -A tests=(
               ["Prometheus"]="http://localhost:30001"
-              ["my-api.com"]="http://localhost:30000"
-              ["staging.my-api.com"]="http://localhost:30000"
+              ["k8s-playground.gerardvm.tech"]="http://k8s-playground.gerardvm.tech:30000"
+              ["staging.k8s-playground.gerardvm.tech"]="http://staging.k8s-playground.gerardvm.tech:30000"
           )
           for service in "${!tests[@]}"; do
               echo "Testing $service..."
-              if curl -sSf -H "Host: ${service,,}" "${tests[$service]}"; then
+              if curl -sSf "${tests[$service]}"; then
                   echo "$service is up ✅"
               else
                   echo "$service test failed ❌"

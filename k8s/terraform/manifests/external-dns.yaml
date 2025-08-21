@@ -35,8 +35,8 @@ spec:
             - |
               mkdir -p /.aws
               echo "[default]" > /.aws/credentials
-              echo "aws_access_key_id=$(cat /secret/access_key)" >> /.aws/credentials
-              echo "aws_secret_access_key=$(cat /secret/secret_key)" >> /.aws/credentials
+              echo "aws_access_key_id=$(cat /secret/aws_access_key)" >> /.aws/credentials
+              echo "aws_secret_access_key=$(cat /secret/aws_secret_key)" >> /.aws/credentials
           volumeMounts:
             - name: aws-credentials
               mountPath: /.aws

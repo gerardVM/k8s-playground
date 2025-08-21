@@ -24,7 +24,7 @@ helm_releases:
     variables:
       replicaCount: 1
       subdomain: staging.
-      domain: my-api.com
+      domain: k8s-playground.gerardvm.tech
       message: "Hello from my-api staging environment!"
 
   - name: my-rest-api
@@ -37,5 +37,5 @@ helm_releases:
     variables:
       replicaCount: 2
       subdomain: ""
-      domain: my-api.com
+      domain: k8s-playground.gerardvm.tech
       message: "Hello from my-api production environment!"

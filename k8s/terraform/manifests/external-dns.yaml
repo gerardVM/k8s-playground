@@ -1,3 +1,5 @@
+# Temporary version for local deployment - (No RBAC available)
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,6 +18,30 @@ spec:
       labels:
         app.kubernetes.io/name: external-dns
     spec:
+      serviceAccount: external-dns
+      serviceAccountName: external-dns
+      volumes:
+        - name: aws-credentials
+          emptyDir: {}
+        - name: aws-secret
+          secret:
+            secretName: external-dns
+      initContainers:
+        - name: write-aws-creds
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /.aws
+              echo "[default]" > /.aws/credentials
+              echo "aws_access_key_id=$(cat /secret/access_key)" >> /.aws/credentials
+              echo "aws_secret_access_key=$(cat /secret/secret_key)" >> /.aws/credentials
+          volumeMounts:
+            - name: aws-credentials
+              mountPath: /.aws
+            - name: aws-secret
+              mountPath: /secret
       containers:
         - name: external-dns
           image: registry.k8s.io/external-dns/external-dns:v0.18.0
@@ -29,13 +55,9 @@ spec:
           env:
             - name: AWS_DEFAULT_REGION
               value: us-east-1
-            - name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: external-dns
-                  key: access_key
-            - name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: external-dns
-                  key: secret_key
+            - name: AWS_SHARED_CREDENTIALS_FILE
+              value: /.aws/credentials
+          volumeMounts:
+            - name: aws-credentials
+              mountPath: /.aws
+              readOnly: true

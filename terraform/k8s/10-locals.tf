@@ -6,9 +6,9 @@ locals {
 
   k8s_path  = "${path.module}/../../k8s/terraform"
   k8s_files = {
-    for dir in ["values", "manifests", "secrets"] :
+    for dir in ["values", "manifests", "namespaces", "secrets"] :
       dir => {
-        for f in fileset("${local.k8s_path}/${dir}", "*") :
+        for f in fileset("${local.k8s_path}/${dir}",  "**/*.yaml") :
           replace(f, ".yaml", "") => "${local.k8s_path}/${dir}/${f}"
       }
   }

@@ -48,6 +48,9 @@ jobs:
           sops -d .github/secrets.env > .github/secrets.decrypted.env
           cat .github/secrets.decrypted.env >> $GITHUB_ENV
 
+      - name: Test env variables
+        run: echo ${TF_VAR_email_address}
+
       - name: Enable all disabled helm releases
         run: |
           sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml

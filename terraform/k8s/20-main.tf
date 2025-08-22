@@ -14,7 +14,7 @@ resource "kubernetes_manifest" "manifest" {
 
   manifest = yamldecode(each.value)
 
-  depends_on = [helm_release.components]
+  depends_on = [kubernetes_secret.secrets]
 }
 
 

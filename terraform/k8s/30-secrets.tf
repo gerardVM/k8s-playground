@@ -12,7 +12,7 @@ resource "kubernetes_secret" "secrets" {
     namespace = each.value.metadata.namespace
   }
 
-  data = each.value.data
+  binary_data = each.value.data
 
   depends_on = [
     kubernetes_namespace.namespace,

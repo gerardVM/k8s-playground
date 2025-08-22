@@ -69,7 +69,7 @@ jobs:
               echo "Testing $service..."
               success=false
               for i in {1..30}; do  # 30 attempts * 10s = 5 minutes
-                  if curl -sSf --max-time 5 "${tests[$service]}" > /dev/null; then
+                  if curl -sSf --max-time 5 "${tests[$service]}"; then
                       echo "$service is up ✅"
                       success=true
                       break

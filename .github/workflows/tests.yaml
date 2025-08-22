@@ -42,16 +42,18 @@ jobs:
             sed -i "s|\${KMS_KEY_ARN}|${{ env.KMS_KEY_ARN }}|g" "$file"
           done
 
-      - name: Start kind cluster
-        run: make start TERRAFORM_OPT="--auto-approve"
+      - name: Start kind cluster in two stages
+        run: |
+          make start TERRAFORM_OPT="--auto-approve -target=helm_release.components"
+          make start TERRAFORM_OPT="--auto-approve"
 
       - name: Run smoke tests
         run: |
           set -e  # exit immediately if a command fails
           declare -A tests=(
               ["Prometheus"]="http://localhost:30001"
-              ["k8s-playground.gerardvm.tech"]="http://k8s-playground.gerardvm.tech:30000"
-              ["staging.k8s-playground.gerardvm.tech"]="http://staging.k8s-playground.gerardvm.tech:30000"
+              ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
+              ["staging.k8s-playground.gerardvm.tech"]="https://staging.k8s-playground.gerardvm.tech:30443"
           )
           for service in "${!tests[@]}"; do
               echo "Testing $service..."

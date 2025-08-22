@@ -32,15 +32,25 @@ jobs:
           role-session-name: k8s-playground
           aws-region: ${{ env.AWS_REGION }}
 
+      - name: Setup SOPS
+        uses: nhedger/setup-sops@v2
+        with:
+          version: '3.7.3'
+
+      - name: Replace KMS key's ARN placeholder
+        run: |
+          for file in k8s/terraform/secrets/*.yaml .github/secrets.env; do
+            sed -i "s|\${KMS_KEY_ARN}|${{ env.KMS_KEY_ARN }}|g" "$file"
+          done
+
+      - name: Source secrets
+        run: |
+          sops -d .github/secrets.env > .github/secrets.decrypted.env
+          cat .github/secrets.decrypted.env >> $GITHUB_ENV
+
       - name: Enable all disabled helm releases
         run: |
           sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml
-
-      - name: Inject KMS key ARN into kubernetes secrets
-        run: |
-          for file in k8s/terraform/secrets/*.yaml; do
-            sed -i "s|\${KMS_KEY_ARN}|${{ env.KMS_KEY_ARN }}|g" "$file"
-          done
 
       - name: Start kind cluster in two stages
         run: |

@@ -62,7 +62,7 @@ jobs:
 
       - name: Run smoke tests
         run: |
-          set -e  # exit immediately if a command fails
+          set -e
           declare -A tests=(
               ["Prometheus"]="http://localhost:30001"
               ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
@@ -70,10 +70,19 @@ jobs:
           )
           for service in "${!tests[@]}"; do
               echo "Testing $service..."
-              if curl -sSf "${tests[$service]}"; then
-                  echo "$service is up ✅"
-              else
-                  echo "$service test failed ❌"
+              success=false
+              for i in {1..30}; do  # 30 attempts * 10s = 5 minutes
+                  if curl -sSf --max-time 5 "${tests[$service]}" > /dev/null; then
+                      echo "$service is up ✅"
+                      success=true
+                      break
+                  else
+                      echo "Attempt $i/30: $service not ready yet..."
+                      sleep 10
+                  fi
+              done
+              if [ "$success" = false ]; then
+                  echo "$service test failed after 5 minutes ❌"
                   exit 1
               fi
           done

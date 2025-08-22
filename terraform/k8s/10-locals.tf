@@ -18,7 +18,9 @@ locals {
       dir => {
         for m in flatten([
           for file_name, file_path in local.k8s_files[dir] : [
-            for idx, doc in split("---", file(file_path)) : {
+            for idx, doc in split("---", templatefile(file_path, {
+                EMAIL_ADDRESS = var.email_address
+            })) : {
               key = "${file_name}-${idx}"
               value = doc
             }

@@ -8,7 +8,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "~> 2.17.0"
+      version = "~> 3.0.2"
     }
     sops = {
       source  = "carlpett/sops"
@@ -22,15 +22,9 @@ provider "kubernetes" {
 }
 
 provider "helm" {
-  kubernetes {
+  kubernetes = {
     config_path = var.kubeconfig_path
   }
 }
 
 provider "sops" {}
-
-variable "kubeconfig_path" {
-  description = "path to kubeconfig"
-  type        = string
-  default     = "../../tmp/kubeconfig.yaml"
-}

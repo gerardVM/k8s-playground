@@ -40,6 +40,7 @@ resource "helm_release" "components" {
   chart      = each.value.chart
   version    = each.value.version
   wait       = each.value.wait
+  set        = try(each.value.set, [])
   values = try([
     templatefile(local.k8s_files.values[each.value.name],
       try(each.value.variables, {})

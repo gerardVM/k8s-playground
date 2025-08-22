@@ -1,4 +1,4 @@
-# Temporary version for local deployment - (No RBAC available)
+# Temporary version for local deployment - (No OIDC available)
 
 apiVersion: apps/v1
 kind: Deployment

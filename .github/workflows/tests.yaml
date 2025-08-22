@@ -32,34 +32,54 @@ jobs:
           role-session-name: k8s-playground
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Enable all disabled components in config
-        run: |
-          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml
-          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml
+      - name: Setup SOPS
+        uses: nhedger/setup-sops@v2
+        with:
+          version: '3.7.3'
 
-      - name: Inject KMS key ARN into kubernetes secrets
+      - name: Replace KMS key's ARN placeholder
         run: |
-          for file in k8s/terraform/secrets/*.yaml; do
+          for file in k8s/terraform/secrets/*.yaml .github/secrets.env; do
             sed -i "s|\${KMS_KEY_ARN}|${{ env.KMS_KEY_ARN }}|g" "$file"
           done
 
-      - name: Start kind cluster
-        run: make start TERRAFORM_OPT="--auto-approve"
+      - name: Source secrets
+        run: |
+          sops -d .github/secrets.env > .github/secrets.decrypted.env
+          cat .github/secrets.decrypted.env >> $GITHUB_ENV
+
+      - name: Enable all disabled helm releases
+        run: |
+          sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml
+
+      - name: Start kind cluster in two stages
+        run: |
+          make start TERRAFORM_OPT='--auto-approve -target=helm_release.components[\"system.cert-manager\"]'
+          make start TERRAFORM_OPT='--auto-approve'
 
       - name: Run smoke tests
         run: |
-          set -e  # exit immediately if a command fails
+          set -e
           declare -A tests=(
               ["Prometheus"]="http://localhost:30001"
-              ["k8s-playground.gerardvm.tech"]="http://k8s-playground.gerardvm.tech:30000"
-              ["staging.k8s-playground.gerardvm.tech"]="http://staging.k8s-playground.gerardvm.tech:30000"
+              ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
+              ["staging.k8s-playground.gerardvm.tech"]="https://staging.k8s-playground.gerardvm.tech:30443"
           )
           for service in "${!tests[@]}"; do
               echo "Testing $service..."
-              if curl -sSf "${tests[$service]}"; then
-                  echo "$service is up ✅"
-              else
-                  echo "$service test failed ❌"
+              success=false
+              for i in {1..30}; do  # 30 attempts * 10s = 5 minutes
+                  if curl -sSf --max-time 5 "${tests[$service]}"; then
+                      echo "$service is up ✅"
+                      success=true
+                      break
+                  else
+                      echo "Attempt $i/30: $service not ready yet..."
+                      sleep 10
+                  fi
+              done
+              if [ "$success" = false ]; then
+                  echo "$service test failed after 5 minutes ❌"
                   exit 1
               fi
           done

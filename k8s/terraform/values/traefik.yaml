@@ -15,3 +15,5 @@ service:
 ports:
   web:
     nodePort: 30000
+  websecure:
+    nodePort: 30443

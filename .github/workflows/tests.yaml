@@ -57,7 +57,7 @@ jobs:
 
       - name: Start kind cluster in two stages
         run: |
-          make start TERRAFORM_OPT='--auto-approve -target=helm_release.components[\"cert-manager\"]'
+          make start TERRAFORM_OPT='--auto-approve -target=helm_release.components[\"system.cert-manager\"]'
           make start TERRAFORM_OPT='--auto-approve'
 
       - name: Run smoke tests

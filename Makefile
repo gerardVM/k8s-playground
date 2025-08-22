@@ -8,6 +8,8 @@ KUBECONFIG     = tmp/kubeconfig.yaml
 CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
 TERRAFORM_DIR ?= terraform/k8s
 
+-include tmp/Makefile.local
+
 ## Quick-start
 
 .PHONY: start

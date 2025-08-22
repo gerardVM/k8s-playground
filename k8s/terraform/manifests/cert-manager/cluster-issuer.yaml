@@ -10,7 +10,7 @@ spec:
     email: ${EMAIL_ADDRESS}
     profile: tlsserver
     privateKeySecretRef:
-      name: letsencrypt-staging
+      name: letsencrypt-prod
     solvers:
     - dns01:
         route53:

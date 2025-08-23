@@ -3,7 +3,7 @@
 resource "kubernetes_manifest" "namespace" {
   for_each = local.k8s_resources.namespaces
 
-  manifest = yamldecode(each.value)
+  manifest = each.value
 }
 
 
@@ -12,7 +12,7 @@ resource "kubernetes_manifest" "namespace" {
 resource "kubernetes_manifest" "manifest" {
   for_each = local.k8s_resources.manifests
 
-  manifest = yamldecode(each.value)
+  manifest = each.value
 
   depends_on = [kubernetes_secret.secrets]
 }

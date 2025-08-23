@@ -63,7 +63,7 @@ resource "helm_release" "flux2-sync" {
   set = [
     {
       name  = "gitRepository.spec.url"
-      value = var.fllux.git_repository_url
+      value = var.flux.git_repository_url
     },
     {
       name  = "gitRepository.spec.branch"

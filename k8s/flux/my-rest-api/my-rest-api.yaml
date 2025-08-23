@@ -4,47 +4,23 @@ kind: Namespace
 metadata:
   name: flux-my-rest-api
 ---
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: k8s-playground
-  namespace: flux-system
-spec:
-  interval: 5m
-  url: https://gerardvm.github.io/k8s-playground/k8s/charts
----
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta2
 kind: HelmRelease
 metadata:
-  name: my-rest-api 
+  name: my-rest-api
   namespace: flux-my-rest-api
 spec:
   interval: 10m
   timeout: 5m
   chart:
     spec:
-      chart: my-rest-api
-      version: '0.1.0'
+      chart: ./k8s/charts/my-rest-api
       sourceRef:
-        kind: HelmRepository
-        name: k8s-playground
+        kind: GitRepository
+        name: flux-system
         namespace: flux-system
       interval: 5m
   releaseName: my-rest-api
-  install:
-    remediation:
-      retries: 3
-  upgrade:
-    remediation:
-      retries: 3
-  test:
-    enable: true
-  driftDetection:
-    mode: enabled
-    ignore:
-    - paths: ["/spec/replicas"]
-      target:
-        kind: Deployment
   values:
     replicaCount: 2
     subdomain: flux.

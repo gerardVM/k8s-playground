@@ -1,6 +1,6 @@
 locals {
   k8s_variables = {
-    EMAIL_ADDRESS = var.email_address
+    ACME_EMAIL_ADDRESS = var.acme_email_address
   }
 
   helm_namespaces = toset(distinct([for release in local.helm_releases : release.namespace]))

@@ -20,7 +20,7 @@ variable "flux" {
   })
   default = {
     git_repository_url      = "https://github.com/gerardvm/k8s-playground.git"
-    git_repository_branch   = "flux"
+    git_repository_branch   = "main"
     git_repository_interval = "1m"
     kustomize_path          = "k8s/flux"
   }

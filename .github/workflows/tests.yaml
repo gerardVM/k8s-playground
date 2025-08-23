@@ -52,7 +52,7 @@ jobs:
         run: |
           sed -i 's/disabled: true/disabled: false/g' terraform/k8s/helm_releases.yaml
 
-      - name: Start kind cluster in two stages
+      - name: Start kind cluster
         run: |
           make start TERRAFORM_OPT='--auto-approve'
 

@@ -62,6 +62,7 @@ jobs:
           declare -A tests=(
               ["Prometheus"]="http://localhost:30001"
               ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
+              ["flux.k8s-playground.gerardvm.tech"]="https://flux.k8s-playground.gerardvm.tech:30443"
               ["staging.k8s-playground.gerardvm.tech"]="https://staging.k8s-playground.gerardvm.tech:30443"
           )
           for service in "${!tests[@]}"; do

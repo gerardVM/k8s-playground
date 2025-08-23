@@ -24,6 +24,14 @@ helm_releases:
       - name: crds.enabled
         value: "true"
 
+  - name: flux2
+    disabled: false
+    namespace: flux-system
+    repository: https://fluxcd-community.github.io/helm-charts
+    chart: flux2
+    version: 2.12.4
+    wait: true
+
   - name: my-rest-api
     disabled: true
     namespace: staging-my-rest-api

@@ -49,3 +49,35 @@ resource "helm_release" "components" {
 
   depends_on = [kubernetes_secret.secrets]
 }
+
+
+# Flux synchronization
+
+resource "helm_release" "flux2_sync" {
+  name       = "flux-system"
+  namespace  = "flux-system"
+  repository = "https://fluxcd-community.github.io/helm-charts"
+  chart      = "flux2-sync"
+  version    = "1.8.2"
+  wait       = true
+  set = [
+    {
+      name  = "gitRepository.spec.url"
+      value = var.flux.git_repository_url
+    },
+    {
+      name  = "gitRepository.spec.ref.branch"
+      value = var.flux.git_repository_branch
+    },
+    {
+      name  = "gitRepository.spec.interval"
+      value = var.flux.git_repository_interval
+    },
+    {
+      name  = "kustomization.spec.path"
+      value = var.flux.kustomize_path
+    }
+  ]
+
+  depends_on = [helm_release.components]
+}

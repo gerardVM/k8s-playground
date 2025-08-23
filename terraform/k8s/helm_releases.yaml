@@ -43,9 +43,11 @@ helm_releases:
       - name: gitRepository.spec.url
         value: "https://github.com/gerardvm/k8s-playground.git"
       - name: gitRepository.spec.ref.branch
-        value: "main"
+        value: "flux" # Change into main
       - name: gitRepository.spec.interval
         value: "1m"
+      - name: kustomization.spec.path
+        value: "k8s/flux"
 
   - name: my-rest-api
     disabled: true

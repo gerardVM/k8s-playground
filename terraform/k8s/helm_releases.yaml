@@ -24,6 +24,29 @@ helm_releases:
       - name: crds.enabled
         value: "true"
 
+  - name: flux2
+    disabled: false
+    namespace: flux-system
+    repository: https://fluxcd-community.github.io/helm-charts
+    chart: flux2
+    version: 2.12.4
+    wait: true
+
+  - name: flux-system
+    disabled: false
+    namespace: flux-system
+    repository: https://fluxcd-community.github.io/helm-charts
+    chart: flux2-sync
+    version: 1.8.2
+    wait: true
+    set:
+      - name: gitRepository.spec.url
+        value: "https://github.com/gerardvm/k8s-playground.git"
+      - name: gitRepository.spec.ref.branch
+        value: "main"
+      - name: gitRepository.spec.interval
+        value: "1m"
+
   - name: my-rest-api
     disabled: true
     namespace: staging-my-rest-api

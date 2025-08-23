@@ -23,6 +23,26 @@ spec:
   releaseName: my-rest-api
   values:
     replicaCount: 2
-    subdomain: flux.
-    domain: k8s-playground.gerardvm.tech
-    message: "Hello from my-api flux environment!"
+    env:
+      listenHost: 0.0.0.0
+      listenPort: 5678
+    image:
+      repository: hashicorp/http-echo
+      tag: latest
+      pullPolicy: IfNotPresent
+      containerPort: 5678
+      args:
+        - "-text=Hello from my-api production environment!"
+    service:
+      type: ClusterIP
+      port: 5678
+    ingress:
+      enabled: true
+      className: traefik
+      annotations: 
+        nginx.ingress.kubernetes.io/rewrite-target: /
+      hosts:
+        - host: flux.k8s-playground.gerardvm.tech
+          paths:
+            - path: /
+              pathType: Prefix

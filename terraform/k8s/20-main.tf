@@ -53,7 +53,7 @@ resource "helm_release" "components" {
 
 # Flux synchronization
 
-resource "helm_release" "flux2-sync" {
+resource "helm_release" "flux2_sync" {
   name       = "flux-system"
   namespace  = "flux-system"
   repository = "https://fluxcd-community.github.io/helm-charts"
@@ -66,7 +66,7 @@ resource "helm_release" "flux2-sync" {
       value = var.flux.git_repository_url
     },
     {
-      name  = "gitRepository.spec.branch"
+      name  = "gitRepository.spec.ref.branch"
       value = var.flux.git_repository_branch
     },
     {
@@ -74,7 +74,7 @@ resource "helm_release" "flux2-sync" {
       value = var.flux.git_repository_interval
     },
     {
-      name  = "kustomize.path"
+      name  = "kustomization.spec.path"
       value = var.flux.kustomize_path
     }
   ]

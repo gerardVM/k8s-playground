@@ -4,7 +4,8 @@ variable "kubeconfig_path" {
   default     = "../../tmp/kubeconfig.yaml"
 }
 
-variable "email_address" {
+variable "acme_email_address" {
   description = "Email address for Let's Encrypt notifications"
   type        = string
+  default     = "example@example.com"
 }

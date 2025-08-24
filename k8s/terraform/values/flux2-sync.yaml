@@ -2,7 +2,7 @@ gitRepository:
   spec:
     url: https://github.com/gerardvm/k8s-playground.git
     ref:
-      branch: flux_sops
+      branch: main
     interval: 1m
 
 kustomization:

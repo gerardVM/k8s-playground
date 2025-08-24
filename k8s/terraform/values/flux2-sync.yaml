@@ -1,0 +1,15 @@
+gitRepository:
+  spec:
+    url: https://github.com/gerardvm/k8s-playground.git
+    ref:
+      branch: main
+    interval: 1m
+
+kustomization:
+  spec:
+    path: k8s/flux
+    # sops docs: https://fluxcd.io/flux/integrations/aws/#for-iam-user-access-keys
+    decryption:
+      provider: sops
+      secretRef:
+        name: sops-keys

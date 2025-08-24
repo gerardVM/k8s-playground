@@ -8,20 +8,24 @@ gitRepository:
 kustomization:
   spec:
     path: k8s/flux
-    # patches: |
-    #   - op: add
-    #     path: /spec/template/spec/containers/0/env/-
-    #     value:
-    #       name: AWS_ACCESS_KEY_ID
-    #       valueFrom:
-    #         secretKeyRef:
-    #           name: flux-controller
-    #           key: aws_access_key
-    #   - op: add
-    #     path: /spec/template/spec/containers/0/env/-
-    #     value:
-    #       name: AWS_SECRET_ACCESS_KEY
-    #       valueFrom:
-    #         secretKeyRef:
-    #           name: flux-controller
-    #           key: aws_secret_key
+  patches:
+    - target:
+        kind: Deployment
+        name: kustomize-controller
+      patch: |
+        - op: add
+          path: /spec/template/spec/containers/0/env/-
+          value:
+            name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: kustomize-controller
+                key: aws_access_key
+        - op: add
+          path: /spec/template/spec/containers/0/env/-
+          value:
+            name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: kustomize-controller
+                key: aws_secret_key

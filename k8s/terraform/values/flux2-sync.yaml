@@ -8,24 +8,10 @@ gitRepository:
 kustomization:
   spec:
     path: k8s/flux
-    patches:
-      - target:
-          kind: Deployment
-          name: kustomize-controller
-        patch: |
-          - op: add
-            path: /spec/template/spec/containers/0/env/-
-            value:
-              name: AWS_ACCESS_KEY_ID
-              valueFrom:
-                secretKeyRef:
-                  name: kustomize-controller
-                  key: aws_access_key
-          - op: add
-            path: /spec/template/spec/containers/0/env/-
-            value:
-              name: AWS_SECRET_ACCESS_KEY
-              valueFrom:
-                secretKeyRef:
-                  name: kustomize-controller
-                  key: aws_secret_key
+    postBuild:
+      substitute:
+        KMS_KEY_ARN: "arn:aws:kms:eu-west-3:877759700856:key/b3ac1035-b1f6-424a-bfe9-a6ec592e7487"
+    decryption:
+      provider: sops
+      secretRef:
+        name: sops-keys

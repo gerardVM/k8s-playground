@@ -77,6 +77,11 @@ require-kubeconfig:
 require-helm: require-cluster require-kubeconfig terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT) -target=helm_release.components
 
+### Update AWS keys in credentials manifest
+.PHONY: set-aws-credentials
+set-aws-credentials:
+	@bash scripts/set_aws_credentials.sh $(AWS_PROFILE) $(CREDENTIALS_MANIFEST)
+
 ## Tools
 
 # ===== kind =====

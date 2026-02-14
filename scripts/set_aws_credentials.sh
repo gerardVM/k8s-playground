@@ -16,8 +16,16 @@ if [[ -z "${AWS_SECRET_ACCESS_KEY:-}" ]]; then
   exit 1
 fi
 
-sed -i "s|<AWS_ACCESS_KEY_ID>|${AWS_ACCESS_KEY_ID}|g" "$manifest"
-sed -i "s|<AWS_SECRET_ACCESS_KEY>|${AWS_SECRET_ACCESS_KEY}|g" "$manifest"
+sed_in_place() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    sed -i '' "$@"
+  else
+    sed -i "$@"
+  fi
+}
+
+sed_in_place "s|<AWS_ACCESS_KEY_ID>|${AWS_ACCESS_KEY_ID}|g" "$manifest"
+sed_in_place "s|<AWS_SECRET_ACCESS_KEY>|${AWS_SECRET_ACCESS_KEY}|g" "$manifest"
 if [[ -n "${AWS_SESSION_TOKEN:-}" ]]; then
-  sed -i "s|<AWS_SESSION_TOKEN>|${AWS_SESSION_TOKEN}|g" "$manifest"
+  sed_in_place "s|<AWS_SESSION_TOKEN>|${AWS_SESSION_TOKEN}|g" "$manifest"
 fi

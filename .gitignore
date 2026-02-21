@@ -1,6 +1,6 @@
 /bin/*
 /tmp/*
-terraform/k8s/manifests/secrets/*
+terraform/manifests/credentials/*
 
 *.terraform.*
 *terraform.tfstate*

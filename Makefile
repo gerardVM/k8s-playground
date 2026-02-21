@@ -6,7 +6,7 @@ CLUSTER_NAME   = local-playground
 CLUSTER_CONFIG = scripts/kind-cluster-config.yaml
 KUBECONFIG     = tmp/kubeconfig.yaml
 CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
-TERRAFORM_DIR ?= terraform/k8s
+TERRAFORM_DIR ?= terraform
 
 ## Quick-start
 

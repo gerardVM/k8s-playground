@@ -21,4 +21,6 @@ resource "kustomization_resource" "manifests" {
   for_each = data.kustomization_build.manifests.ids
 
   manifest = data.kustomization_build.manifests.manifests[each.value]
+
+  depends_on = [helm_release.flux2]
 }

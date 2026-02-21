@@ -45,7 +45,7 @@ terraform-init: require-cluster require-kubeconfig terraform
 
 ### Plan the terraform deployment
 .PHONY: terraform-plan
-terraform-plan: require-cluster require-kubeconfig terraform
+terraform-plan: require-cluster require-kubeconfig require-credentials terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) plan $(TERRAFORM_OPT)
 
 ### Apply the terraform deployment
@@ -71,8 +71,8 @@ require-kubeconfig:
 	@[ -f $(KUBECONFIG) ] || (echo "error: kubeconfig is missing." && exit 1)
 
 ### Set user AWS credentials in the cluster
-.PHONY: set-credentials
-set-credentials:
+.PHONY: require-credentials
+require-credentials:
 	@bash scripts/set_credentials.sh $(AWS_PROFILE) $(CREDENTIALS_MANIFEST)
 
 ## Tools

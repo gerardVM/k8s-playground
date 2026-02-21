@@ -1,0 +1,12 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: k8s-playground
+  namespace: flux-system
+spec:
+  interval: 10m
+  ref:
+    branch: only_flux # Change to main
+  # secretRef:
+  #   name: github-auth
+  url: https://github.com/gerardVM/k8s-playground.git

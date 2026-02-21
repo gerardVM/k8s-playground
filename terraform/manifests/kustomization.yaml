@@ -17,3 +17,6 @@ secretGenerator:
 resources:
   - namespace.yaml
   - aws-cli.yaml # For troubleshooting purposes
+  - gitrepository.yaml
+  - products.yaml
+  - operations.yaml

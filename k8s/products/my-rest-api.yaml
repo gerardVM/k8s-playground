@@ -4,15 +4,17 @@ metadata:
   name: flux-my-rest-api
 ---
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: GitRepository
 metadata:
   name: k8s-playground
   namespace: flux-my-rest-api
 spec:
   interval: 5m
   url: https://github.com/gerardVM/k8s-playground.git
+  ref:
+    branch: main
 ---
-apiVersion: helm.toolkit.fluxcd.io/v2beta2
+apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: my-rest-api
@@ -24,7 +26,7 @@ spec:
     spec:
       chart: ./k8s/charts/my-rest-api
       sourceRef:
-        kind: HelmRepository
+        kind: GitRepository
         name: k8s-playground
       interval: 5m
   releaseName: my-rest-api

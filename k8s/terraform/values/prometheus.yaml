@@ -1,8 +1,0 @@
-defaultRules:
-  rules:
-    etcd: false
-grafana:
-  adminPassword: admin
-  service:
-    type: NodePort
-    nodePort: 30001

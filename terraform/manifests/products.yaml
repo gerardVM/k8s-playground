@@ -4,6 +4,8 @@ metadata:
   name: products
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: operations
   interval: 10m0s
   path: ./k8s/products
   decryption:

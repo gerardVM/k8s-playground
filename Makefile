@@ -6,9 +6,7 @@ CLUSTER_NAME   = local-playground
 CLUSTER_CONFIG = scripts/kind-cluster-config.yaml
 KUBECONFIG     = tmp/kubeconfig.yaml
 CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
-TERRAFORM_DIR ?= terraform/k8s
-
--include tmp/Makefile.local
+TERRAFORM_DIR ?= terraform
 
 ## Quick-start
 
@@ -47,12 +45,12 @@ terraform-init: require-cluster require-kubeconfig terraform
 
 ### Plan the terraform deployment
 .PHONY: terraform-plan
-terraform-plan: require-cluster require-kubeconfig terraform
+terraform-plan: require-cluster require-kubeconfig require-credentials terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) plan $(TERRAFORM_OPT)
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
-terraform-apply: require-cluster require-kubeconfig require-helm terraform
+terraform-apply: require-cluster require-kubeconfig require-credentials terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT)
 
 ### Destroy the terraform deployment
@@ -72,10 +70,10 @@ require-cluster:
 require-kubeconfig:
 	@[ -f $(KUBECONFIG) ] || (echo "error: kubeconfig is missing." && exit 1)
 
-### Ensure that helm releases are applied
-.PHONY: require-helm
-require-helm: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT) -target=helm_release.components
+### Set user AWS credentials in the cluster
+.PHONY: require-credentials
+require-credentials:
+	@bash scripts/set_credentials.sh $(AWS_PROFILE) $(CREDENTIALS_MANIFEST)
 
 ## Tools
 

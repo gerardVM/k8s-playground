@@ -1,13 +1,12 @@
-# Temporary version for local deployment - (No OIDC available)
-
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
   name: letsencrypt-prod
+  namespace: system
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: ${ACME_EMAIL_ADDRESS}
+    email: ${email}
     profile: tlsserver
     privateKeySecretRef:
       name: letsencrypt-prod
@@ -15,9 +14,4 @@ spec:
     - dns01:
         route53:
           region: us-east-1
-          accessKeyIDSecretRef:
-            name: cert-manager
-            key: aws_access_key
-          secretAccessKeySecretRef:
-            name: cert-manager
-            key: aws_secret_key
+          role: ${role}

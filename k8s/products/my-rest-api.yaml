@@ -24,7 +24,7 @@ spec:
   timeout: 5m
   chart:
     spec:
-      chart: ./k8s/charts/my-rest-api
+      chart: ./charts/my-rest-api
       sourceRef:
         kind: GitRepository
         name: k8s-playground

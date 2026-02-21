@@ -6,7 +6,7 @@ metadata:
 spec:
   interval: 10m
   ref:
-    branch: only_flux # Change to main
+    branch: main
   # secretRef:
   #   name: github-auth
   url: https://github.com/gerardVM/k8s-playground.git

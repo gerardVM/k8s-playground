@@ -14,8 +14,8 @@ spec:
       name: sops-credentials
   postBuild:
     substituteFrom:
-      - kind: Secret
-        name: config
+      - kind: ConfigMap
+        name: products-env
   prune: true
   sourceRef:
     kind: GitRepository

@@ -13,10 +13,6 @@ secretGenerator:
     namespace: flux-system
     files:
       - sops.aws-kms=credentials/sops.yaml
-  - name: config
-    namespace: flux-system
-    envs:
-      - ./credentials/config.env
 
 resources:
   - namespace.yaml

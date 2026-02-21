@@ -20,6 +20,8 @@ jobs:
       AWS_REGION: ${{ vars.AWS_REGION }}
       AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
       AWS_ROLE: ${{ vars.AWS_ROLE }}
+      TF_VAR_cluster_issuer_role: ${{ vars.TF_VAR_CLUSTER_ISSUER_ROLE }}
+      TF_VAR_cluster_issuer_email: ${{ vars.TF_VAR_CLUSTER_ISSUER_EMAIL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3

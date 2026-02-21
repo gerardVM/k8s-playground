@@ -13,14 +13,27 @@ resource "helm_release" "flux2" {
 
 # Kubernetes manifests via Kustomization
 
-data "kustomization_build" "manifests" {
-  path = "${path.module}/manifests"
+data "kustomization_overlay" "manifests" {  
+  resources = ["${path.module}/manifests"]
+
+  config_map_generator {
+    name      = "products-env"
+    namespace = "flux-system"
+    literals  = [
+      "role=${var.cluster_issuer_role}",
+      "email=${var.cluster_issuer_email}"
+    ]
+
+    options {
+      disable_name_suffix_hash = true
+    }
+  }
 }
 
 resource "kustomization_resource" "manifests" {
-  for_each = data.kustomization_build.manifests.ids
+  for_each = data.kustomization_overlay.manifests.ids
 
-  manifest = data.kustomization_build.manifests.manifests[each.value]
+  manifest = data.kustomization_overlay.manifests.manifests[each.value]
 
   depends_on = [helm_release.flux2]
 }

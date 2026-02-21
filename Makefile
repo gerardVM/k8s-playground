@@ -8,8 +8,6 @@ KUBECONFIG     = tmp/kubeconfig.yaml
 CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
 TERRAFORM_DIR ?= terraform/k8s
 
--include tmp/Makefile.local
-
 ## Quick-start
 
 .PHONY: start
@@ -52,7 +50,7 @@ terraform-plan: require-cluster require-kubeconfig terraform
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
-terraform-apply: require-cluster require-kubeconfig require-helm terraform
+terraform-apply: require-cluster require-kubeconfig terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT)
 
 ### Destroy the terraform deployment
@@ -71,11 +69,6 @@ require-cluster:
 .PHONY: require-kubeconfig
 require-kubeconfig:
 	@[ -f $(KUBECONFIG) ] || (echo "error: kubeconfig is missing." && exit 1)
-
-### Ensure that helm releases are applied
-.PHONY: require-helm
-require-helm: require-cluster require-kubeconfig terraform
-	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT) -target=helm_release.components
 
 ## Tools
 

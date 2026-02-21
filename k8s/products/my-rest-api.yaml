@@ -10,7 +10,6 @@ metadata:
   namespace: flux-my-rest-api
 spec:
   interval: 5m
-  type: git
   url: https://github.com/gerardVM/k8s-playground.git
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2beta2

@@ -12,6 +12,10 @@ spec:
     provider: sops
     secretRef:
       name: sops-credentials
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: config
   prune: true
   sourceRef:
     kind: GitRepository

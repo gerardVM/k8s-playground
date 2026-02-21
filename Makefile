@@ -50,7 +50,7 @@ terraform-plan: require-cluster require-kubeconfig require-credentials terraform
 
 ### Apply the terraform deployment
 .PHONY: terraform-apply
-terraform-apply: require-cluster require-kubeconfig terraform
+terraform-apply: require-cluster require-kubeconfig require-credentials terraform
 	$(TERRAFORM) -chdir=$(TERRAFORM_DIR) apply $(TERRAFORM_OPT)
 
 ### Destroy the terraform deployment

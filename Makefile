@@ -70,6 +70,11 @@ require-cluster:
 require-kubeconfig:
 	@[ -f $(KUBECONFIG) ] || (echo "error: kubeconfig is missing." && exit 1)
 
+### Set user AWS credentials in the cluster
+.PHONY: set-credentials
+set-credentials:
+	@bash scripts/set_credentials.sh $(AWS_PROFILE) $(CREDENTIALS_MANIFEST)
+
 ## Tools
 
 # ===== kind =====

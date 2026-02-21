@@ -4,15 +4,15 @@ kind: Kustomization
 generatorOptions:
   disableNameSuffixHash: true
 
-# secretGenerator:
-#   - name: aws-credentials
-#     namespace: system
-#     envs:
-#       - ./secrets/aws.env
-#   - name: sops-credentials
-#     namespace: flux-system
-#     files:
-#       - sops.aws-kms=secrets/sops.yaml
+secretGenerator:
+  - name: aws-credentials
+    namespace: system
+    envs:
+      - ./credentials/aws.env
+  - name: sops-credentials
+    namespace: flux-system
+    files:
+      - sops.aws-kms=credentials/sops.yaml
 
 resources:
   - namespace.yaml

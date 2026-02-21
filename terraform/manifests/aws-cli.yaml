@@ -18,9 +18,9 @@ spec:
           image: public.ecr.aws/aws-cli/aws-cli:latest
           command: ["/bin/sh"]
           args: ["-c", "sleep infinity"]
-          # envFrom:
-          #   - secretRef:
-          #       name: aws-credentials
+          envFrom:
+            - secretRef:
+                name: aws-credentials
           resources:
             requests:
               cpu: 50m

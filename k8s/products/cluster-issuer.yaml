@@ -1,32 +1,17 @@
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-    name: letsencrypt-prod
-    namespace: system
+  name: letsencrypt-prod
+  namespace: system
 spec:
-    acme:
-        server: https://acme-v02.api.letsencrypt.org/directory
-        email: ENC[AES256_GCM,data:L6+yeIHy41+lxKD/8i6wXsWh,iv:Vs7pUMsp4ZoHuOm4yIr8PbqqAlW1Qv1bwABdtG0vLcg=,tag:RbLb6GGMQpVh33luubCD7A==,type:str]
-        profile: tlsserver
-        privateKeySecretRef:
-            name: letsencrypt-prod
-        solvers:
-            - dns01:
-                route53:
-                    region: us-east-1
-                    role: ENC[AES256_GCM,data:+9ltp0c2ch9yySdmlOKH5brHuuE/c118npAp0D9bIkWKV/mPmB14EO1U,iv:MmMO152ak7BUAdmgX2rY28j4wy8MRQ85I0ohEByH0Nk=,tag:Qb5FTLm8U/BGBy4Nzq340A==,type:str]
-sops:
-    kms:
-        - arn: ${KMS_KEY_ARN}
-          created_at: "2026-02-21T21:36:52Z"
-          enc: AQICAHiFgQKnfZQbS0qksdcKnEcqfA3yd0cfbwGnH+L5HeKvdgFm3q3f/EJaV8c0RKDDV4MBAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMp9LS0XYfT3s3HKWTAgEQgDtFJr1b9etsNX73Dwg7l5HgwDyoaYH0co5BDS4Pyage9lc0MT0GQa/CYMCtWN59XTBCoHBMpjGHC5V4jQ==
-          aws_profile: ""
-    gcp_kms: []
-    azure_kv: []
-    hc_vault: []
-    age: []
-    lastmodified: "2026-02-21T21:36:53Z"
-    mac: ENC[AES256_GCM,data:iuW9ZYtBDbEI36yTrnj6xFb4I49JIVGef1MgIewRYQFFr5IWvKodrga5nVgxU2iv7dyATtksXYmbNmUZi4cgZF6pb5DWFDLoMJsOsdSE7XF3zNQx7E6+Boba1FRbi1TqB9u3hOHYybcOK7yFsBlZp8aY0/NG+3yEuMkomUkC0N8=,iv:73mfvQX/3mEz7Fls+fT78XgUtrczjemqQPWK22MIyDU=,tag:Fcub3QuUsRQTSVOsWIFDAg==,type:str]
-    pgp: []
-    encrypted_regex: email|role
-    version: 3.9.1
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: ${EMAIL}
+    profile: tlsserver
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+    - dns01:
+        route53:
+          region: us-east-1
+          role: ${ROLE}

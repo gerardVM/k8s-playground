@@ -24,21 +24,47 @@ spec:
     txtOwnerId: gerardvm
     txtPrefix: k8s-playground
     policy: sync
+    initContainers:
+      - name: setup-aws-credentials
+        image: public.ecr.aws/aws-cli/aws-cli:latest
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            echo "Setting up AWS credentials file..."
+            
+            # Create credentials file with default and externaldns profiles
+            cat > /aws/credentials << EOF
+            [default]
+            aws_access_key_id = ${AWS_ACCESS_KEY_ID}
+            aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
+            aws_session_token = ${AWS_SESSION_TOKEN}
+            region = us-east-1
+            
+            [externaldns]
+            role_arn = ${role}
+            source_profile = default
+            EOF
+            
+            # Set proper permissions
+            chmod 600 /aws/credentials
+            
+            echo "AWS credentials setup completed"
+        envFrom:
+          - secretRef:
+              name: aws-credentials
+        volumeMounts:
+          - name: aws-credentials-dir
+            mountPath: /aws
+    extraVolumes:
+      - name: aws-credentials-dir
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: aws-credentials-dir
+        mountPath: /aws
+        readOnly: true
     env:
-      - name: AWS_DEFAULT_REGION
-        value: us-east-1
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY  
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_SECRET_ACCESS_KEY
-      - name: AWS_SESSION_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials  
-            key: AWS_SESSION_TOKEN
+      - name: AWS_SHARED_CREDENTIALS_FILE
+        value: /aws/credentials
+      - name: AWS_PROFILE
+        value: externaldns

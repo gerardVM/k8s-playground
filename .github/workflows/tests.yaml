@@ -40,6 +40,7 @@ jobs:
       - name: Run smoke tests
         run: |
           set -e
+          export KUBECONFIG=tmp/kubeconfig.yaml
           declare -A tests=(
               # ["Prometheus"]="http://localhost:30001"
               # ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
@@ -57,6 +58,8 @@ jobs:
                       break
                   else
                       echo "Attempt $i/30: $service not ready yet..."
+                      echo "External-DNS logs (last 10 lines):"
+                      KUBECONFIG=tmp/kubeconfig.yaml kubectl logs -n system deployment/external-dns --tail=10 2>/dev/null || echo "external-dns logs not available"
                       sleep 10
                   fi
               done

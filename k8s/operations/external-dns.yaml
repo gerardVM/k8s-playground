@@ -40,18 +40,20 @@ spec:
           - -c
           - |
             echo "Setting up AWS credentials file..."
+
+            ROLE_ARN=${role}
+            CREDS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name externaldns-session)
+            export ROLED_AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
+            export ROLED_AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
+            export ROLED_AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
             
             # Create credentials file with default and externaldns profiles
             cat > /aws/credentials << EOF
             [default]
-            aws_access_key_id = ${AWS_ACCESS_KEY_ID}
-            aws_secret_access_key = ${AWS_SECRET_ACCESS_KEY}
-            aws_session_token = ${AWS_SESSION_TOKEN}
+            aws_access_key_id = ${ROLED_AWS_ACCESS_KEY_ID}
+            aws_secret_access_key = ${ROLED_AWS_SECRET_ACCESS_KEY}
+            aws_session_token = ${ROLED_AWS_SESSION_TOKEN}
             region = us-east-1
-            
-            [externaldns]
-            role_arn = ${role}
-            source_profile = default
             EOF
             
             # Set proper permissions
@@ -74,5 +76,3 @@ spec:
     env:
       - name: AWS_SHARED_CREDENTIALS_FILE
         value: /aws/credentials
-      - name: AWS_PROFILE
-        value: externaldns

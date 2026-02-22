@@ -15,7 +15,7 @@ spec:
   postBuild:
     substituteFrom:
       - kind: ConfigMap
-        name: products-env
+        name: environment
   prune: true
   sourceRef:
     kind: GitRepository

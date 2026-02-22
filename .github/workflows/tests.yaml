@@ -37,33 +37,34 @@ jobs:
         run: |
           make start TERRAFORM_OPT='--auto-approve'
 
-      # - name: Run smoke tests
-      #   run: |
-      #     set -e
-      #     declare -A tests=(
-      #         ["Prometheus"]="http://localhost:30001"
-      #         ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
-      #         ["flux.k8s-playground.gerardvm.tech"]="https://flux.k8s-playground.gerardvm.tech:30443"
-      #         ["staging.k8s-playground.gerardvm.tech"]="https://staging.k8s-playground.gerardvm.tech:30443"
-      #     )
-      #     for service in "${!tests[@]}"; do
-      #         echo "Testing $service..."
-      #         success=false
-      #         for i in {1..30}; do  # 30 attempts * 10s = 5 minutes
-      #             if curl -sSf --max-time 5 "${tests[$service]}"; then
-      #                 echo "$service is up ✅"
-      #                 success=true
-      #                 break
-      #             else
-      #                 echo "Attempt $i/30: $service not ready yet..."
-      #                 sleep 10
-      #             fi
-      #         done
-      #         if [ "$success" = false ]; then
-      #             echo "$service test failed after 5 minutes ❌"
-      #             exit 1
-      #         fi
-      #     done
+      - name: Run smoke tests
+        run: |
+          set -e
+          declare -A tests=(
+              # ["Prometheus"]="http://localhost:30001"
+              # ["k8s-playground.gerardvm.tech"]="https://k8s-playground.gerardvm.tech:30443"
+              ["flux.k8s-playground.gerardvm.tech"]="https://flux.k8s-playground.gerardvm.tech:30443"
+              ["test20260222.k8s-playground.gerardvm.tech"]="https://test20260222.k8s-playground.gerardvm.tech:30443"
+              # ["staging.k8s-playground.gerardvm.tech"]="https://staging.k8s-playground.gerardvm.tech:30443"
+          )
+          for service in "${!tests[@]}"; do
+              echo "Testing $service..."
+              success=false
+              for i in {1..30}; do  # 30 attempts * 10s = 5 minutes
+                  if curl -sSf --max-time 5 "${tests[$service]}"; then
+                      echo "$service is up ✅"
+                      success=true
+                      break
+                  else
+                      echo "Attempt $i/30: $service not ready yet..."
+                      sleep 10
+                  fi
+              done
+              if [ "$success" = false ]; then
+                  echo "$service test failed after 5 minutes ❌"
+                  exit 1
+              fi
+          done
 
       - name: Stop kind cluster
         run: make stop TERRAFORM_OPT="--auto-approve"

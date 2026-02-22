@@ -39,40 +39,59 @@ spec:
         args:
           - -c
           - |
-            echo "Setting up AWS credentials file..."
-
-            ROLE_ARN=${role}
-            CREDS=$(aws sts assume-role --role-arn $ROLE_ARN --role-session-name externaldns-session)
-            export ROLED_AWS_ACCESS_KEY_ID=$(echo $CREDS | jq -r '.Credentials.AccessKeyId')
-            export ROLED_AWS_SECRET_ACCESS_KEY=$(echo $CREDS | jq -r '.Credentials.SecretAccessKey')
-            export ROLED_AWS_SESSION_TOKEN=$(echo $CREDS | jq -r '.Credentials.SessionToken')
+            echo "Assuming External-DNS role for temporary credentials..."
             
-            # Create credentials file with default and externaldns profiles
-            cat > /aws/credentials << EOF
+            ROLE_ARN=${role}
+            echo "Base credentials: ${AWS_ACCESS_KEY_ID:0:10}..."
+            echo "Assuming role: $ROLE_ARN"
+            
+            # Use AWS STS to assume role and get temporary credentials
+            CREDENTIALS=$(aws sts assume-role \
+              --role-arn "$ROLE_ARN" \
+              --role-session-name "externaldns-$(date +%s)" \
+              --duration-seconds 3600 \
+              --output text \
+              --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]')
+            
+            if [ $? -eq 0 ]; then
+              # Parse credentials (space-separated)
+              TEMP_ACCESS_KEY=$(echo "$CREDENTIALS" | cut -f1)
+              TEMP_SECRET_KEY=$(echo "$CREDENTIALS" | cut -f2)  
+              TEMP_SESSION_TOKEN=$(echo "$CREDENTIALS" | cut -f3)
+              
+              # Write AWS credentials file with assumed role credentials
+              cat > /shared/credentials << EOF
             [default]
-            aws_access_key_id = ${ROLED_AWS_ACCESS_KEY_ID}
-            aws_secret_access_key = ${ROLED_AWS_SECRET_ACCESS_KEY}
-            aws_session_token = ${ROLED_AWS_SESSION_TOKEN}
+            aws_access_key_id = ${TEMP_ACCESS_KEY}
+            aws_secret_access_key = ${TEMP_SECRET_KEY}
+            aws_session_token = ${TEMP_SESSION_TOKEN}
             region = us-east-1
             EOF
-            
-            # Set proper permissions
-            chmod 600 /aws/credentials
-            
-            echo "AWS credentials setup completed"
+              
+              chmod 600 /shared/credentials
+              echo "✅ Role assumed successfully!"
+              echo "Temp Access Key: ${TEMP_ACCESS_KEY:0:10}..."
+              echo "Session expires in 1 hour"
+            else
+              echo "❌ Failed to assume role"
+              aws sts get-caller-identity
+              exit 1
+            fi
         envFrom:
           - secretRef:
               name: aws-credentials
         volumeMounts:
-          - name: aws-credentials-dir
-            mountPath: /aws
+          - name: shared-env
+            mountPath: /shared
     extraVolumes:
-      - name: aws-credentials-dir
+      - name: shared-env
         emptyDir: {}
     extraVolumeMounts:
-      - name: aws-credentials-dir
-        mountPath: /aws
+      - name: shared-env
+        mountPath: /shared
         readOnly: true
     env:
       - name: AWS_SHARED_CREDENTIALS_FILE
-        value: /aws/credentials
+        value: /shared/credentials
+      - name: AWS_PROFILE
+        value: default

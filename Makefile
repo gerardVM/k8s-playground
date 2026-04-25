@@ -3,7 +3,7 @@
 ## Configuration
 
 CLUSTER_NAME   = local-playground
-CLUSTER_CONFIG = scripts/kind-cluster-config.yaml
+CLUSTER_CONFIG = $(TERRAFORM_DIR)/manifests/kind-cluster-config.yaml
 KUBECONFIG     = tmp/kubeconfig.yaml
 CLUSTER        = $(KUBECTL) --kubeconfig $(KUBECONFIG)
 TERRAFORM_DIR ?= terraform

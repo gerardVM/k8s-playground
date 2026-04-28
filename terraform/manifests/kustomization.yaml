@@ -4,19 +4,8 @@ kind: Kustomization
 generatorOptions:
   disableNameSuffixHash: true
 
-secretGenerator:
-  - name: aws-credentials
-    namespace: system
-    envs:
-      - ./credentials/aws.env
-  - name: sops-credentials
-    namespace: flux-system
-    files:
-      - sops.aws-kms=credentials/sops.yaml
-
 resources:
   - namespace.yaml
-  - aws-cli.yaml # For troubleshooting purposes
-  - gitrepository.yaml
-  - products.yaml
-  - operations.yaml
+  - github-sa.yaml
+  - applications.yaml
+  - ../../k8s/operations

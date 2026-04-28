@@ -1,0 +1,27 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: my-ai-team
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: https://github.com/gerardVM/my-ai-team.git
+  ref:
+    branch: first_agent
+  provider: github
+  secretRef:
+    name: github-sa
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: master-agent
+  namespace: flux-system
+spec:
+  interval: 10m0s
+  path: ./k8s/overlays/master
+  targetNamespace: master-agent
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: my-ai-team

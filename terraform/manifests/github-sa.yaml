@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-sa
+  namespace: flux-system
+type: Opaque
+stringData:
+  githubAppID: "3500107"
+  githubAppInstallationID: "126987899"
+  githubAppPrivateKey: |
+    -----BEGIN RSA PRIVATE KEY-----
+    MIIEpAIBAAKCAQEAyur8blwBAWFu0TleNpBCqfLqKOX3hzqIG+TAqySush+2cse7
+    +k0aeLO6rEUqqawZ3pte249LHskV/sY/JvYY6ksOmyP21LnYJbeIG+Y8ZZ5czYaR
+    cyQe+50MyfMxJkujCbxTXNZjpDi9oVwUal3oz4Xm6dbY3CSvHo+WNFlcSjgmalDb
+    BPOwzNlLRJhNqm26QvfqhB652USvCReibf5wwqAVfbREMrZ8cPRdEueubcmyyLfo
+    CHj8KLzT/VrJAUSorHwesyFHZmZY629BqDrXP29axw1Ip4VAnt+qftTsLdXO0uwT
+    jt2DUT7yY+O5ksV4OediaxBBrMCeQC+PytZiPQIDAQABAoIBAESnHkLEU/7AlTqq
+    WyrAwh03t2ug6o9RCU3OpjUBEy3mtta8pue3gHZH8KdqO1XuiU4caQqFv5ep1ww8
+    zI8FAkb6n/VzRIaSXgPcxWsTCWokGyfaGInJNcZRS0tkQUPAoWeg1N97FXkxTU8z
+    lSCrpyHXHtoMu5A3xRvk3p/Vf/kHzTR1riAtgr3wPibA147RXZ3HLzPgeqrxLsbe
+    IPLFjrN75jd6qpik6IahydN0vZNMeqVFCMSFrSkgQsqrwidDmHN/Tgr86/R3iU3C
+    Pb+njeqODSinY2pIU0dgfEM6TqjLRozdU03UPUN5ksL/x3JD+4x2CBQFgfoPFqQT
+    HclStoECgYEA/Zw4dMKhTA/EKEzRiWB7Rrd3FFKQrxHLBaUcLTaWv6sUGbDZp35J
+    YQHN1inDwg5Xd7xdulg+oqQI2ceWPBszxTBFTQp5rnZ1u2CHLub8cK/wgHuSCRZl
+    unuHRk7p+ti8A+HEShEa6aRAfb/xXmME8/lzmHGZDNzTULG/iuTEyt0CgYEAzNR7
+    OQllEz6ooViEUYG2jEMpN7H63UjnIOXwuP12qTG/kpqnt+cPK6BapmSFdcDPNTKS
+    YcOYpWL5Oorx1YsOHALicAyU/4bYrx+Dzj6gC+dG4hGELwyJadrXgDBB7ajmNvX1
+    tkQeTkNsUhD9B9ySoAZ5q8VI0PKwn3V0rHFoDuECgYEA9bBcOTE8lbVIcUpKTG49
+    vzqJkBSUuiXgqy1TaLHTxQd1x5W+pjb/24yl3m5DiUHfls3Td2158JI9SM3ES6KG
+    uueSm5okW9HDKK3RCK0ZrgmkUrRju44JK2n0mTZmEm/ZZWFYifCcQ/Ct0aUbrjb7
+    W2g0hmC2xvE/fpNUXrhVtbkCgYB3AmXuB9VgTyGvTTzkFpe3+zWxlImLlNYluTQa
+    Z7pQKAWE6rLUGT4pPOwujW01s6cw44dFol3Iii8AosZMKpUyFUL3k3fm17SCW687
+    YAuhnukCZOcGZyRYCrz3UBKeQWoxOMtg8Ucide4z6Ib70F6o99otwVzDep7Ap3/4
+    yZOKQQKBgQD4YU9IaAOsU9XUrZESA+zYWcOCFyYFo0SfzwhxmC8k8XDddscvw2mn
+    ZCBTB+RCrM+aLeKBO56wniVvz16pL7/znZB0FoeWvKRTvblujRfyxyTEqz2m6AxD
+    Drj6Ql13M+6/ux9XDgNqrWSkDitnSskUcBjq24O8D8zATWS/JjeE5w==
+    -----END RSA PRIVATE KEY-----
+
+  # githubAppBaseURL: "<github-enterprise-api-url>" #optional, required only for GitHub Enterprise Server users
+  # ca.crt: | #optional, for GitHub Enterprise Server users
+  #   -----BEGIN CERTIFICATE-----
+  #   ...
+  #   -----END CERTIFICATE-----

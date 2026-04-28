@@ -15,19 +15,6 @@ resource "helm_release" "flux2" {
 
 data "kustomization_overlay" "manifests" {  
   resources = ["${path.module}/manifests"]
-
-  config_map_generator {
-    name      = "products-env"
-    namespace = "flux-system"
-    literals  = [
-      "role=${var.cluster_issuer_role}",
-      "email=${var.cluster_issuer_email}"
-    ]
-
-    options {
-      disable_name_suffix_hash = true
-    }
-  }
 }
 
 resource "kustomization_resource" "manifests" {

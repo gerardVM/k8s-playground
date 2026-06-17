@@ -17,10 +17,10 @@ data "kustomization_overlay" "manifests" {
   resources = ["${path.module}/manifests"]
 
   config_map_generator {
-    name      = "products-env"
+    name      = "environment"
     namespace = "flux-system"
     literals  = [
-      "role=${var.cluster_issuer_role}",
+      "role=${var.aws_assume_role}",
       "email=${var.cluster_issuer_email}"
     ]
 

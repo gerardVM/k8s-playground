@@ -24,21 +24,74 @@ spec:
     txtOwnerId: gerardvm
     txtPrefix: k8s-playground
     policy: sync
+    initContainers:
+      - name: setup-aws-credentials
+        image: public.ecr.aws/aws-cli/aws-cli:latest
+        securityContext:
+          runAsUser: 0
+          runAsNonRoot: false
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+              - ALL
+        command: ["/bin/sh"]
+        args:
+          - -c
+          - |
+            echo "Assuming External-DNS role for temporary credentials..."
+            
+            ROLE_ARN=${role}
+            echo "Base credentials: ${AWS_ACCESS_KEY_ID:0:10}..."
+            echo "Assuming role: $ROLE_ARN"
+            
+            # Use AWS STS to assume role and get temporary credentials
+            CREDENTIALS=$(aws sts assume-role \
+              --role-arn "$ROLE_ARN" \
+              --role-session-name "externaldns-$(date +%s)" \
+              --duration-seconds 3600 \
+              --output text \
+              --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]')
+            
+            if [ $? -eq 0 ]; then
+              # Parse credentials (space-separated)
+              TEMP_ACCESS_KEY=$(echo "$CREDENTIALS" | cut -f1)
+              TEMP_SECRET_KEY=$(echo "$CREDENTIALS" | cut -f2)  
+              TEMP_SESSION_TOKEN=$(echo "$CREDENTIALS" | cut -f3)
+              
+              # Write AWS credentials file with assumed role credentials
+              cat > /shared/credentials << EOF
+            [default]
+            aws_access_key_id = ${TEMP_ACCESS_KEY}
+            aws_secret_access_key = ${TEMP_SECRET_KEY}
+            aws_session_token = ${TEMP_SESSION_TOKEN}
+            region = us-east-1
+            EOF
+              
+              chmod 600 /shared/credentials
+              echo "✅ Role assumed successfully!"
+              echo "Temp Access Key: ${TEMP_ACCESS_KEY:0:10}..."
+              echo "Session expires in 1 hour"
+            else
+              echo "❌ Failed to assume role"
+              aws sts get-caller-identity
+              exit 1
+            fi
+        envFrom:
+          - secretRef:
+              name: aws-credentials
+        volumeMounts:
+          - name: shared-env
+            mountPath: /shared
+    extraVolumes:
+      - name: shared-env
+        emptyDir: {}
+    extraVolumeMounts:
+      - name: shared-env
+        mountPath: /shared
+        readOnly: true
     env:
-      - name: AWS_DEFAULT_REGION
-        value: us-east-1
-      - name: AWS_ACCESS_KEY_ID
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_ACCESS_KEY_ID
-      - name: AWS_SECRET_ACCESS_KEY  
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials
-            key: AWS_SECRET_ACCESS_KEY
-      - name: AWS_SESSION_TOKEN
-        valueFrom:
-          secretKeyRef:
-            name: aws-credentials  
-            key: AWS_SESSION_TOKEN
+      - name: AWS_SHARED_CREDENTIALS_FILE
+        value: /shared/credentials
+      - name: AWS_PROFILE
+        value: default

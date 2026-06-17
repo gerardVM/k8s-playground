@@ -55,3 +55,7 @@ spec:
           paths:
             - path: /
               pathType: Prefix
+        - host: test20260222.k8s-playground.gerardvm.tech
+          paths:
+            - path: /
+              pathType: Prefix
